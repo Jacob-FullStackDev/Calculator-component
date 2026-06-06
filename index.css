@@ -1,3 +1,38 @@
-* {
-  background-color: red;
+/* "A (more) Modern CSS Reset" by Andy Bell
+Source: https://piccalil.li/blog/a-more-modern-css-reset/
+Licensed under CC BY 3.0
+https://creativecommons.org/licenses/by/3.0/
+Modified: removed comments and unused element selectors.
+*/
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -moz-text-size-adjust: none;
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+}
+body,
+h1 {
+  margin-block-end: 0;
+}
+
+/* Set core body defaults */
+body {
+  min-height: 100vh;
+  line-height: 1.5;
+}
+h1,
+button {
+  line-height: 1.1;
+}
+input,
+button,
+textarea,
+select {
+  font-family: inherit;
+  font-size: inherit;
 }
