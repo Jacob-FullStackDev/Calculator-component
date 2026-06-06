@@ -24,6 +24,9 @@ h1 {
 body {
   min-height: 100vh;
   line-height: 1.5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 h1,
 button {
@@ -35,4 +38,20 @@ textarea,
 select {
   font-family: inherit;
   font-size: inherit;
+}
+/*COMPONENT STYLES*/
+main {
+  display: inline-block;
+  border: 2px solid #333;
+  max-width: 400px;
+  max-height: 600px;
+}
+.output-display {
+  display: inline-block;
+  min-height: 10%;
+  max-height: 30%;
+  width: 100%;
+  background-color: #000;
+  color: #fff;
+  overflow-x: hidden;
 }
