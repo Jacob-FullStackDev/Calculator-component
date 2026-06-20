@@ -9,32 +9,40 @@
   </head>
   <body>
     <main>
-      <div class="output-display">Enter equation</div>
-      <section id="num-btns">
-        <button class="btn btn--num">0</button>
-        <button class="btn btn--num">1</button>
-        <button class="btn btn--num">2</button>
-        <button class="btn btn--num">3</button>
-        <button class="btn btn--num">4</button>
-        <button class="btn btn--num">5</button>
-        <button class="btn btn--num">6</button>
-        <button class="btn btn--num">7</button>
-        <button class="btn btn--num">8</button>
-        <button class="btn btn--num">9</button>
-        <button class="btn btn--num">Ans</button>
-      </section>
-      <section id="operator-btns">
-        <button class="btn btn--operator">+</button>
-        <button class="btn btn--operator">-</button>
-        <button class="btn btn--operator">&times;</button>
-        <button class="btn btn--operator">&divide;</button>
-        <button class="btn btn--operator">^</button>
-        <button class="btn btn--operator">&radic;</button>
-        <button class="btn btn--operator">()</button>
-        <button class="btn btn--operator">%</button>
-        <button class="btn btn--operator">.</button>
-        <section id="func-btns">
-          <button class="btn btn--func">
+      <div class="output-display">0</div>
+      <section id="calculator-btns">
+        <div class="row btns-row-1">
+          <button class="btn btn--num">1</button>
+          <button class="btn btn--num">2</button>
+          <button class="btn btn--num">3</button>
+          <button class="btn btn--operator">+</button>
+        </div>
+        <div class="row btns-row-2">
+          <button class="btn btn--num">4</button>
+          <button class="btn btn--num">5</button>
+          <button class="btn btn--num">6</button>
+          <button class="btn btn--operator">-</button>
+        </div>
+        <div class="row btns-row-3">
+          <button class="btn btn--num">7</button>
+          <button class="btn btn--num">8</button>
+          <button class="btn btn--num">9</button>
+          <button class="btn btn--operator">&times;</button>
+        </div>
+        <div class="row btns-row-4">
+          <button class="btn btn--num">0</button>
+          <button class="btn btn--operator">%</button>
+          <button class="btn btn--operator">^</button>
+          <button class="btn btn--operator">&divide;</button>
+        </div>
+        <div class="row btns-row-5">
+          <button class="btn btn--operator">&radic;</button>
+          <button class="btn btn--operator">.</button>
+          <button class="btn btn--operator">()</button>
+          <button class="btn btn--func">=</button>
+        </div>
+        <div class="row btns-row-6">
+          <button class="btn btn--func" id="history-btn">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -55,8 +63,7 @@
             </svg>
           </button>
           <button class="btn btn--func">CE</button>
-          <button class="btn btn--func">=</button>
-        </section>
+        </div>
       </section>
     </main>
   </body>

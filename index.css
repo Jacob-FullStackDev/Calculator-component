@@ -8,12 +8,15 @@ Modified: removed comments and unused element selectors.
 *::before,
 *::after {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 html {
   -moz-text-size-adjust: none;
   -webkit-text-size-adjust: none;
   text-size-adjust: none;
+  font-size: 62.5%;
 }
 body,
 h1 {
@@ -40,18 +43,55 @@ select {
   font-size: inherit;
 }
 /*COMPONENT STYLES*/
+body {
+  background-color: #888;
+}
+
 main {
-  display: inline-block;
   border: 2px solid #333;
-  max-width: 400px;
-  max-height: 600px;
+  box-shadow: 7px 7px 14px #000;
+  background-color: rgb(20, 20, 216);
 }
 .output-display {
-  display: inline-block;
-  min-height: 10%;
-  max-height: 30%;
+  display: flex;
   width: 100%;
+  min-height: 96px;
+  max-height: 144px;
+  align-items: center;
   background-color: #000;
   color: #fff;
   overflow-x: hidden;
+  font-size: 48px;
+  padding-left: 20px;
+}
+#calculator-btns {
+  display: grid;
+  margin: 30px;
+  row-gap: 20px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  column-gap: 20px;
+}
+.btn {
+  display: flex;
+  font-size: 2.7rem;
+  justify-content: center;
+  align-items: center;
+  padding: 12px;
+  border: none;
+  box-shadow: 1px 1px 3px #222;
+}
+#history-btn {
+  grid-column: 2; /* centers bottom 2 buttons in their row container */
+}
+.btn:hover {
+  outline: 3px solid #000; /* using border changes the rendered dimensions which I didn't want */
+  opacity: 0.92;
+}
+.btn:active {
+  background-color: #ff5353;
+  box-shadow: 1px 1px 20px #111;
 }
