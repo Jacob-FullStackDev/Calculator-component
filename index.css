@@ -48,7 +48,7 @@ body {
 }
 
 main {
-  border: 2px solid #333;
+  border: 1px solid #333;
   box-shadow: 7px 7px 14px #000;
   background-color: rgb(20, 20, 216);
 }
@@ -94,4 +94,9 @@ main {
 .btn:active {
   background-color: #ff5353;
   box-shadow: 1px 1px 20px #111;
+}
+@media (max-width: 380px) {
+  .output-display {
+    max-height: 96px;
+  }
 }
