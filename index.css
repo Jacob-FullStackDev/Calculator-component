@@ -55,14 +55,14 @@ body {
 #output-display {
   display: flex;
   width: 100%;
-  min-height: 96px;
-  max-height: 144px;
+  min-height: 72px;
+  max-lines: 2;
   align-items: center;
   background-color: #000;
   color: #fff;
-  overflow-x: hidden;
-  font-size: 48px;
-  padding-left: 20px;
+  overflow: hidden;
+  font-size: 36px;
+  padding-left: 30px;
 }
 #calculator-btns,
 #append-btns {

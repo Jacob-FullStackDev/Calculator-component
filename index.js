@@ -1,8 +1,12 @@
 "use strict";
 const appendBtns = document.getElementById("append-btns"); // buttons that contain numbers or operators that go after numbers
-console.log(appendBtns);
 const outputDisplay = document.getElementById("output-display");
-console.log(outputDisplay);
+let expression = "";
 appendBtns.addEventListener("click", (e) => {
-  console.log(e.target.textContent);
+  //   console.log(e.target.textContent);
+  if (expression.length < 18) {
+    expression = expression += e.target.textContent;
+    console.log(expression.length);
+  }
+  outputDisplay.textContent = expression;
 });
