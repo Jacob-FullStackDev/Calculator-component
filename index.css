@@ -64,10 +64,13 @@ body {
   font-size: 48px;
   padding-left: 20px;
 }
-#calculator-btns {
+#calculator-btns,
+#append-btns {
   display: grid;
-  margin: 30px;
   row-gap: 20px;
+}
+#calculator-btns {
+  margin: 30px;
 }
 
 .row {
