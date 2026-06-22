@@ -47,7 +47,7 @@ body {
   background-color: #888;
 }
 
-main {
+#calculator-component {
   border: 1px solid #333;
   box-shadow: 7px 7px 14px #000;
   background-color: rgb(20, 20, 216);
@@ -101,7 +101,17 @@ main {
 }
 
 @media (max-width: 380px) {
+  #calculator-component {
+    width: 100vw;
+  }
+  .row {
+    column-gap: 8px;
+  }
+  #calculator-btns {
+    margin: 0;
+    row-gap: 8px;
+  }
   .output-display {
-    max-height: 96px;
+    margin-bottom: 12px;
   }
 }
