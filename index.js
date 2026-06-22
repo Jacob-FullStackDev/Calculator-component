@@ -4,5 +4,5 @@ console.log(appendBtns);
 const outputDisplay = document.getElementById("output-display");
 console.log(outputDisplay);
 appendBtns.addEventListener("click", (e) => {
-  console.log(e.currentTarget);
+  console.log(e.target.textContent);
 });

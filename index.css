@@ -52,7 +52,7 @@ body {
   box-shadow: 7px 7px 14px #000;
   background-color: rgb(20, 20, 216);
 }
-.output-display {
+#output-display {
   display: flex;
   width: 100%;
   min-height: 96px;
