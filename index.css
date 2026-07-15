@@ -50,13 +50,12 @@ body {
 #calculator-component {
   border: 1px solid #333;
   box-shadow: 7px 7px 14px #000;
-  background-color: rgb(20, 20, 216);
+  background-color: rgb(38, 38, 210);
 }
 #output-display {
   display: flex;
   width: 100%;
-  min-height: 72px;
-  max-lines: 2;
+  min-height: 84px;
   align-items: center;
   background-color: #000;
   color: #fff;
@@ -64,12 +63,9 @@ body {
   font-size: 36px;
   padding-left: 30px;
 }
-#calculator-btns,
-#append-btns {
+#calculator-btns {
   display: grid;
   row-gap: 20px;
-}
-#calculator-btns {
   margin: 30px;
 }
 
@@ -84,11 +80,14 @@ body {
   justify-content: center;
   align-items: center;
   padding: 12px;
+  width: 60px;
+  height: 60px;
   border: none;
   box-shadow: 2px 2px 3px #222;
 }
 #history-btn {
-  grid-column: 2; /* centers bottom 2 buttons in their row container */
+  grid-column: 2 / 4;
+  width: 140px;
 }
 .btn:hover {
   outline: 3px solid #000; /* using border changes the rendered dimensions which I didn't want */
@@ -103,18 +102,17 @@ body {
   border: none;
 }
 
-@media (max-width: 380px) {
+@media (max-width: 420px) {
   #calculator-component {
-    width: 100vw;
-  }
-  .row {
-    column-gap: 8px;
+    width: 100%;
   }
   #calculator-btns {
-    margin: 0;
-    row-gap: 8px;
+    margin: 0 12px;
   }
-  .output-display {
-    margin-bottom: 12px;
+  body {
+    align-items: flex-start;
+  }
+  .row {
+    align-items: start;
   }
 }

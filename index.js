@@ -1,24 +1,17 @@
 "use strict";
-const appendBtns = document.getElementById("append-btns"); // buttons that contain numbers or operators that go after numbers
+// DOM elements
+const btns = document.getElementById("calculator-btns");
 const outputDisplay = document.getElementById("output-display");
+// initial state
+let operand = "";
+let operator = "";
 let expression = "";
-appendBtns.addEventListener("click", (e) => {
-  //   console.log(e.target.textContent);
-  if (expression.length === 0 || Number(e.target.textContent) !== 0) {
-    if (
-      (expression.length < 18 &&
-        Number(e.target.textContent !== 0) &&
-        !isNaN(Number(e.target.textContent))) ||
-      (expression.length > 0 && !isNaN(expression[expression.length - 1]))
-    ) {
-      expression = expression += e.target.textContent;
-      console.log(Number(e.target.textContent));
-      if (outputDisplay.textContent === "0") {
-        /* clears initial output display value of 0 
-        so adding the expression contents doesn't rerender it */
-        outputDisplay.textContent = "";
-      }
-      outputDisplay.textContent = expression;
-    }
-  }
+let total = 0;
+let lastCharOperator = false; // should block adding another operator
+btns.addEventListener("click", (e) => {
+  if (e.target.tagName !== "BUTTON") return; // gaurd clause in case a button element isn't pressed
+  // append number to screen
+  // if last character is operator, don't add another operator
+  // if there are 2 or more operands when the = is pressed, return result on screen
+  // push expression to an array, push array to historyObj
 });
