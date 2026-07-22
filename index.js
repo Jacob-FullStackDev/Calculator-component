@@ -3,96 +3,127 @@
 const btns = document.getElementById("calculator-btns");
 const outputDisplay = document.getElementById("output-display");
 // initial state
-let operand = "";
-let operator = "";
-let expression = "";
-let total = 0;
 const operators = ["+", "-", "×", "÷", "^"];
-
-function handleOperations(
-  operand1,
-  operator,
-  operand2 = null,
-  percentage = false,
-) {
-  if (operator === "+" && percentage === false) {
+const historyArr = [];
+let operand, operatorCount, operator, expression, operandContainsDecimal;
+function init() {
+  operand = "";
+  operatorCount = 0;
+  operator = "";
+  expression = [];
+  operandContainsDecimal = false;
+}
+init();
+function handleOperations(operand1, operator, operand2 = null) {
+  if (operator === "+") {
     outputDisplay.textContent = operand1 + operand2;
-    // historyArr.push([operand1, operator, operand2])
+    historyArr.push([
+      String(operand1),
+      operator,
+      String(operand2),
+      outputDisplay.textContent,
+    ]);
   }
-  if (operator === "-" && percentage === false) {
+  if (operator === "-") {
     outputDisplay.textContent = operand1 - operand2;
-    // historyArr.push([operand1, operator, operand2])
+    historyArr.push([operand1, operator, operand2, outputDisplay.textContent]);
   }
-  if (operator === "×" && percentage === false) {
+  if (operator === "×") {
     outputDisplay.textContent = operand1 * operand2;
-    // historyArr.push([operand1, operator, operand2])
+    historyArr.push([operand1, operator, operand2, outputDisplay.textContent]);
   }
-  if (operator === "÷" && percentage === false) {
-    if ((operand1 === operand2) === "0") {
-      outputDisplay.textContent = "Can not divide by 0";
+  if (operator === "÷") {
+    if (operand2 === "0") {
+      console.error("Can not divide by 0");
       return;
     }
     outputDisplay.textContent = operand1 / operand2;
-    // historyArr.push([operand1, operator, operand2])
+    historyArr.push([operand1, operator, operand2, outputDisplay.textContent]);
   }
   if (operator === "^" && percentage === false) {
     outputDisplay.textContent = operand1 ** operand2;
-    // historyArr.push([operand1, operator, operand2])
+    historyArr.push([operand1, operator, operand2, outputDisplay.textContent]);
   }
   if (operator === "÷" && percentage === false) {
     outputDisplay.textContent = operand1 + operand2;
-    // historyArr.push([operand1, operator, operand2])
+    historyArr.push([operand1, operator, operand2, outputDisplay.textContent]);
   }
   if (operator === "√") {
     outputDisplay.textContent = Math.sqrt(operand);
-    // historyArr.push([operand1, operator])
+    historyArr.push([operand1, operator, outputDisplay.textContent]);
   }
 }
 btns.addEventListener("click", (e) => {
   if (e.target.tagName !== "BUTTON") return; // gaurd clause in case a button element isn't pressed
-  if (e.target.classList.contains("btn--clear")) {
-    // temporary gaurd clause to avoid CE appearing on the output display, TODO: implement clear functionality
-    return;
-  }
-  if (e.target.classList.contains("btn--num")) {
+  // handle numbers
+  if (
+    e.target.classList.contains("btn--num") &&
+    operandContainsPercentage === false
+  ) {
     outputDisplay.textContent === "0"
       ? (outputDisplay.textContent = e.target.textContent)
       : (outputDisplay.textContent += e.target.textContent);
   }
+  // handle addition, subtraction, multiplication, division, exponentiation, all operations in operators array
   if (
     outputDisplay.textContent !== "0" &&
-    e.target.classList.contains("btn--operator")
+    e.target.classList.contains("btn--operator") &&
+    operatorCount === 0
   ) {
-    if (
-      !operators.includes(
-        outputDisplay.textContent[outputDisplay.textContent.length - 1],
-      )
-    ) {
-      outputDisplay.textContent += e.target.textContent;
-    } else {
-      console.log(
-        outputDisplay.textContent.slice(
-          0,
-          outputDisplay.textContent.length - 1,
-        ) + e.target.textContent,
-      );
-      outputDisplay.textContent =
-        outputDisplay.textContent.slice(
-          0,
-          outputDisplay.textContent.length - 1,
-        ) + e.target.textContent;
-    }
+    operator = e.target.textContent;
+    expression.push(Number(outputDisplay.textContent), operator);
+    outputDisplay.textContent += operator;
+    operatorCount++;
+    operandContainsDecimal = false;
+    operandContainsPercentage = false;
   }
+  if (
+    e.target.classList.contains("btn--operator") &&
+    operators.includes(
+      outputDisplay.textContent[outputDisplay.textContent.length - 1],
+    )
+  ) {
+    operator = e.target.textContent;
+    outputDisplay.textContent =
+      outputDisplay.textContent.slice(0, outputDisplay.textContent.length - 1) +
+      operator;
+    expression[1] = operator;
+    console.log(expression);
+  }
+  // handle clear, percentages, decimals
   if (e.target.classList.contains("btn--special")) {
-    console.log("reached");
     if (e.target.id === "clear-btn") {
-      console.log("reached id");
+      init();
+      outputDisplay.textContent = "0";
+    }
+    if (e.target.id === "equals-btn") {
+      expression.push(
+        Number(
+          outputDisplay.textContent.slice(
+            outputDisplay.textContent.indexOf(operator) + 1,
+          ),
+        ),
+      );
+      if (expression.length === 3 && percentage === false) {
+        handleOperations(expression[0], operator, expression[2]);
+        init();
+      }
+    }
+    if (
+      e.target.id === "decimal-btn" &&
+      operandContainsDecimal === false &&
+      percentageComesBeforeDecimal === false
+    ) {
+      outputDisplay.textContent += ".";
+      operandContainsDecimal = true;
+    }
+    if (
+      e.target.id === "percentage-btn" &&
+      operandContainsPercentage === false
+    ) {
+      console.log("reached");
+      outputDisplay.textContent += "%";
+      operandContainsPercentage = true;
     }
   }
 });
-// TODO: if operator is truthy, but there is nothing after it, reassign it, else no more operators
-
-// append number to screen
-// if last character is operator, don't add another operator
-// if there are 2 or more operands when the = is pressed, return result on screen
-// push expression to an array, push array to historyObj

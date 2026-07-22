@@ -85,10 +85,7 @@ body {
   border: none;
   box-shadow: 2px 2px 3px #222;
 }
-#history-btn {
-  grid-column: 2 / 4;
-  width: 140px;
-}
+
 .btn:hover {
   outline: 3px solid #000; /* using border changes the rendered dimensions which I didn't want */
   opacity: 0.92;
