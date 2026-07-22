@@ -104,26 +104,15 @@ btns.addEventListener("click", (e) => {
           ),
         ),
       );
-      if (expression.length === 3 && percentage === false) {
+      if (expression.includes("√")) {
+        // all operations besides square root
         handleOperations(expression[0], operator, expression[2]);
         init();
       }
     }
-    if (
-      e.target.id === "decimal-btn" &&
-      operandContainsDecimal === false &&
-      percentageComesBeforeDecimal === false
-    ) {
+    if (e.target.id === "decimal-btn" && operandContainsDecimal === false) {
       outputDisplay.textContent += ".";
       operandContainsDecimal = true;
-    }
-    if (
-      e.target.id === "percentage-btn" &&
-      operandContainsPercentage === false
-    ) {
-      console.log("reached");
-      outputDisplay.textContent += "%";
-      operandContainsPercentage = true;
     }
   }
 });
