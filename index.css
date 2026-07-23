@@ -42,6 +42,11 @@ select {
   font-family: inherit;
   font-size: inherit;
 }
+#root-container {
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr 0.5fr;
+}
 /*COMPONENT STYLES*/
 body {
   background-color: #888;
@@ -51,6 +56,7 @@ body {
   border: 1px solid #333;
   box-shadow: 7px 7px 14px #000;
   background-color: rgb(38, 38, 210);
+  grid-column: 1;
 }
 #output-display {
   display: flex;
@@ -112,4 +118,29 @@ body {
   .row {
     align-items: start;
   }
+}
+#history-section {
+  padding: 5% 0;
+  background-color: #fff;
+  width: 15%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  grid-column: 2;
+  width: 100%;
+  overflow-y: auto;
+}
+#history-section.hidden {
+  display: none;
+}
+#history-section button {
+  border: 2px solid #ccc;
+  display: flex;
+  width: 70%;
+  margin-bottom: 6px;
+  padding: 10px;
+}
+#close-history-section-btn.close-history-section-btn {
+  border: 2px solid red;
 }
