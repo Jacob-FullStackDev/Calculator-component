@@ -6,22 +6,27 @@ const historySection = document.getElementById("history-section");
 const historyBtn = document.getElementById("history-btn");
 // initial state
 const operators = ["+", "-", "×", "÷", "^"];
-const historyArr = [["1", "-", "3", "5"]];
+const historyArr = [];
 let operand,
   operatorCount,
   operator,
   expression,
   operandContainsDecimal,
-  squareRoot;
-function init() {
+  squareRoot,
+  lastCharDecimal;
+function init(clearOutputDisplay) {
   operand = "";
   operatorCount = 0;
   operator = "";
   expression = [];
   operandContainsDecimal = false;
   squareRoot = false; // flag if the square root operator is being used
+  lastCharDecimal = false; // flag if an operand ends in a decimal without any numbers after it
+  if (clearOutputDisplay === true) {
+    outputDisplay.textContent = "0";
+  }
 }
-init();
+init(true);
 function handleOperations(operand1, operator, operand2) {
   if (operator === "+") {
     outputDisplay.textContent = operand1 + operand2;
@@ -41,8 +46,9 @@ function handleOperations(operand1, operator, operand2) {
     historyArr.push([operand1, operator, operand2, outputDisplay.textContent]);
   }
   if (operator === "÷") {
-    if (operand2 === "0") {
-      console.error("Can not divide by 0");
+    if (operand2 === 0) {
+      console.error("Can not divide by 0, clearing output");
+      setTimeout(init, 2000, true);
       return;
     }
     outputDisplay.textContent = operand1 / operand2;
@@ -64,23 +70,62 @@ function handleOperations(operand1, operator, operand2) {
 btns.addEventListener("click", (e) => {
   if (e.target.tagName !== "BUTTON") return; // gaurd clause in case a button element isn't pressed
   // handle numbers
-  if (e.target.classList.contains("btn--num")) {
+  if (
+    e.target.classList.contains("btn--num") &&
+    operandContainsDecimal === false
+  ) {
     outputDisplay.textContent === "0"
       ? (outputDisplay.textContent = e.target.textContent)
       : (outputDisplay.textContent += e.target.textContent);
+    lastCharDecimal = false;
+  }
+  if (
+    e.target.classList.contains("btn--num") &&
+    operandContainsDecimal === true
+  ) {
+    outputDisplay.textContent += e.target.textContent;
+    lastCharDecimal = false;
+  }
+  if (
+    e.target.classList.contains("btn--num") &&
+    e.target.textContent === "0" &&
+    outputDisplay.textContent === "0" &&
+    operandContainsDecimal === false
+  ) {
+    console.warn(
+      "Can not add more than one 0 without another number, select another number",
+    );
   }
   // handle addition, subtraction, multiplication, division, exponentiation, all operations in operators array
   if (
     outputDisplay.textContent !== "0" &&
     e.target.classList.contains("btn--operator") &&
     operatorCount === 0 &&
-    operator !== "√"
+    operator !== "√" &&
+    lastCharDecimal === false
   ) {
     operator = e.target.textContent;
     expression.push(Number(outputDisplay.textContent), operator);
     outputDisplay.textContent += operator;
-    operatorCount++;
     operandContainsDecimal = false;
+    operatorCount++;
+  } else if (
+    operatorCount >= 1 &&
+    e.target.classList.contains("btn--operator")
+  ) {
+    console.warn("Can not add more than 1 operator");
+  } else if (
+    lastCharDecimal === true &&
+    e.target.classList.contains("btn--operator")
+  ) {
+    operandContainsDecimal = lastCharDecimal = false;
+    outputDisplay.textContent =
+      outputDisplay.textContent.slice(0, outputDisplay.textContent.length - 1) +
+      e.target.textContent;
+    console.warn(
+      "No number after decimal point, reassigned decimal to operator",
+    );
+    console.log(outputDisplay.textContent);
   }
   if (
     e.target.classList.contains("btn--operator") &&
@@ -97,14 +142,13 @@ btns.addEventListener("click", (e) => {
   // handle clear, percentages, decimals
   if (e.target.classList.contains("btn--special")) {
     if (e.target.id === "clear-btn") {
-      init();
-      outputDisplay.textContent = "0";
+      init(true);
     }
     if (e.target.id === "equals-btn") {
       expression.push(
         Number(
           outputDisplay.textContent.slice(
-            outputDisplay.textContent.indexOf(operator) + 1,
+            outputDisplay.textContent.indexOf(operator) + 1, // check if cutting an extra char
           ),
         ),
       );
@@ -119,13 +163,22 @@ btns.addEventListener("click", (e) => {
     }
     if (e.target.id === "decimal-btn" && operandContainsDecimal === false) {
       outputDisplay.textContent += ".";
-      operandContainsDecimal = true;
+      operandContainsDecimal = lastCharDecimal = true;
+    } else if (
+      e.target.id === "decimal-btn" &&
+      operandContainsDecimal === true
+    ) {
+      console.warn("There can only be 1 active decimal per operand");
     }
     if (e.target.id === "squareroot-btn" && outputDisplay.textContent === "0") {
       outputDisplay.textContent = "√";
-      console.log(outputDisplay.textContent);
       operator = "√";
       squareRoot = true;
+    } else if (
+      e.target.id === "squareroot-btn" &&
+      outputDisplay.textContent !== "0"
+    ) {
+      console.warn("Square root must be used before first operand");
     }
   }
 });
@@ -145,6 +198,8 @@ historyBtn.addEventListener("click", (e) => {
       }
     }
   } else {
-    console.warn("Warning: empty history");
+    console.warn(
+      "There is no history, please complete an operation before trying to access your history",
+    );
   }
 });
