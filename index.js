@@ -66,6 +66,7 @@ function handleOperations(operand1, operator, operand2) {
     outputDisplay.textContent = Math.sqrt(operand1);
     historyArr.push([operand1, operator, outputDisplay.textContent]);
   }
+  console.log(historyArr);
 }
 btns.addEventListener("click", (e) => {
   if (e.target.tagName !== "BUTTON") return; // gaurd clause in case a button element isn't pressed
@@ -107,7 +108,7 @@ btns.addEventListener("click", (e) => {
     operator = e.target.textContent;
     expression.push(Number(outputDisplay.textContent), operator);
     outputDisplay.textContent += operator;
-    operandContainsDecimal = false;
+    operandContainsDecimal = lastCharDecimal = false;
     operatorCount++;
   } else if (
     operatorCount >= 1 &&
@@ -118,14 +119,24 @@ btns.addEventListener("click", (e) => {
     lastCharDecimal === true &&
     e.target.classList.contains("btn--operator")
   ) {
-    operandContainsDecimal = lastCharDecimal = false;
     outputDisplay.textContent =
       outputDisplay.textContent.slice(0, outputDisplay.textContent.length - 1) +
       e.target.textContent;
+    operator = e.target.textContent;
+    operatorCount++;
+    operandContainsDecimal = lastCharDecimal = false;
+    expression.push(
+      Number(
+        outputDisplay.textContent.slice(
+          0,
+          outputDisplay.textContent.length - 1,
+        ),
+      ),
+      operator,
+    );
     console.warn(
       "No number after decimal point, reassigned decimal to operator",
     );
-    console.log(outputDisplay.textContent);
   }
   if (
     e.target.classList.contains("btn--operator") &&
