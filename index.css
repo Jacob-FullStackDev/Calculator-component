@@ -137,7 +137,6 @@ body {
 #history-section button:not(#clear-history-btn) {
   display: flex;
   justify-content: flex-start;
-  border: 2px solid #ccc;
   display: flex;
   width: 70%;
   margin-bottom: 6px;
@@ -156,5 +155,4 @@ body {
   width: 48px;
   height: 48px;
   margin-bottom: 6px;
-  padding: 10px;
 }

@@ -2,8 +2,8 @@
 // DOM elements
 const btns = document.getElementById("calculator-btns");
 const outputDisplay = document.getElementById("output-display");
-const historySection = document.getElementById("history-section");
 const historyBtn = document.getElementById("history-btn");
+const historySection = document.getElementById("history-section");
 // initial state
 const operators = ["+", "-", "×", "÷", "^"];
 const historyArr = [];
@@ -13,8 +13,7 @@ let operatorCount,
   expression,
   operandContainsDecimal,
   squareRoot,
-  lastCharDecimal,
-  historyShowing;
+  lastCharDecimal;
 function init(clearOutputDisplay) {
   operatorCount = 0;
   operator = "";
@@ -22,7 +21,6 @@ function init(clearOutputDisplay) {
   operandContainsDecimal = false;
   squareRoot = false; // flag if the square root operator is being used
   lastCharDecimal = false; // flag if an operand ends in a decimal without any numbers after it
-  historyShowing = false; // flag if history section is being displayed
   if (clearOutputDisplay === true) {
     outputDisplay.textContent = "0";
   }
@@ -47,7 +45,6 @@ function handleOutputEdgeCases(res) {
     res = Number.MAX_SAFE_INTEGER;
   }
   outputDisplay.textContent = res;
-  operand = res; // will this be a number datatype if textContent = operand = res
 }
 function handleOperations(operand1, operator, operand2) {
   let result;
@@ -87,17 +84,16 @@ function handleOperations(operand1, operator, operand2) {
     handleOutputEdgeCases(result);
     historyArr.push([operand1, operator, "=", result]);
   }
-  console.log(previousHistoryArrLength);
   const expressionBtn = document.createElement("button");
   expressionBtn.className = "btn btn--expression";
   for (let i = 0; i < historyArr[previousHistoryArrLength].length; i++) {
     expressionBtn.textContent += `${historyArr[previousHistoryArrLength][i]} `;
   }
+  expressionBtn.textContent = expressionBtn.textContent.trimEnd();
   historySection.appendChild(expressionBtn);
   init();
 }
 btns.addEventListener("click", (e) => {
-  console.log(operatorCount, "first");
   if (e.target.tagName !== "BUTTON") return; // gaurd clause in case a button element isn't pressed
   // handle numbers
   if (e.target.classList.contains("btn--num")) {
@@ -129,7 +125,6 @@ btns.addEventListener("click", (e) => {
     outputDisplay.textContent += operator;
     operandContainsDecimal = lastCharDecimal = false;
     operatorCount++;
-    console.log(operatorCount, "second");
   } else if (
     operatorCount >= 1 &&
     e.target.classList.contains("btn--operator")
@@ -181,43 +176,38 @@ btns.addEventListener("click", (e) => {
       init(true);
     }
     if (e.target.id === "equals-btn") {
-      console.log(
+      if (
+        operatorCount > 0 &&
+        !operators.includes(
+          outputDisplay.textContent[outputDisplay.textContent.length - 1],
+        )
+      ) {
+        expression.push(
+          Number(
+            outputDisplay.textContent.slice(
+              outputDisplay.textContent.indexOf(operator) + 1,
+            ),
+          ),
+        );
+        if (squareRoot === false) {
+          // all operations besides square root
+          handleOperations(expression[0], operator, expression[2]);
+        } else {
+          handleOperations(expression[0], operator);
+        }
+        return;
+      }
+      if (
         operators.includes(
           outputDisplay.textContent[outputDisplay.textContent.length - 1],
-        ),
-      );
-    }
-    if (
-      e.target.id === "equals-btn" &&
-      operatorCount > 0 &&
-      !operators.includes(
-        outputDisplay.textContent[outputDisplay.textContent.length - 1],
-      )
-    ) {
-      expression.push(
-        Number(
-          outputDisplay.textContent.slice(
-            outputDisplay.textContent.indexOf(operator) + 1,
-          ),
-        ),
-      );
-      if (squareRoot === false) {
-        // all operations besides square root
-        handleOperations(expression[0], operator, expression[2]);
-      } else {
-        handleOperations(expression[0], operator);
+        )
+      ) {
+        console.warn("No number after operator");
+        return;
       }
-    } else if (
-      e.target.id === "equals-btn" &&
-      operators.includes(
-        outputDisplay.textContent[outputDisplay.textContent.length - 1],
-      )
-    ) {
-      console.warn("No number after operator");
-      return;
-    }
-    if (e.target.id === "equals-btn" && operatorCount === 0) {
-      console.warn("Invalid expression entered");
+      if (e.target.id === "equals-btn" && operatorCount === 0) {
+        console.warn("Invalid expression entered");
+      }
     }
     if (e.target.id === "decimal-btn" && operandContainsDecimal === false) {
       outputDisplay.textContent += ".";
@@ -250,11 +240,20 @@ historyBtn.addEventListener("click", (e) => {
   historySection.classList.toggle("hidden");
 });
 historySection.addEventListener("click", (e) => {
-  if (e.target.tagName !== "BUTTON") return; // gaurd clause in case a button element isn't pressed
+  if (e.target.tagName === "SECTION") {
+    return; // gaurd clause in case a button element isn't pressed
+  }
   if (e.target.classList.contains("btn--expression")) {
     outputDisplay.textContent = e.target.textContent.slice(
       e.target.textContent.indexOf("=") + 2,
     );
-    console.log(outputDisplay.textContent);
+  }
+  if (e.target.classList.contains("clear-history")) {
+    console.log(historySection.firstElementChild.id);
+    while (
+      !historySection.lastElementChild.classList.contains("clear-history")
+    ) {
+      historySection.removeChild(historySection.lastChild);
+    }
   }
 });
