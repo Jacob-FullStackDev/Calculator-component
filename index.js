@@ -49,7 +49,6 @@ function handleOutputEdgeCases(res) {
   outputDisplay.textContent = res;
   operand = res; // will this be a number datatype if textContent = operand = res
 }
-
 function handleOperations(operand1, operator, operand2) {
   let result;
   const previousHistoryArrLength = historyArr.length;
@@ -96,9 +95,9 @@ function handleOperations(operand1, operator, operand2) {
   }
   historySection.appendChild(expressionBtn);
   init();
-  console.log(outputDisplay.textContent);
 }
 btns.addEventListener("click", (e) => {
+  console.log(operatorCount, "first");
   if (e.target.tagName !== "BUTTON") return; // gaurd clause in case a button element isn't pressed
   // handle numbers
   if (e.target.classList.contains("btn--num")) {
@@ -130,6 +129,7 @@ btns.addEventListener("click", (e) => {
     outputDisplay.textContent += operator;
     operandContainsDecimal = lastCharDecimal = false;
     operatorCount++;
+    console.log(operatorCount, "second");
   } else if (
     operatorCount >= 1 &&
     e.target.classList.contains("btn--operator")
@@ -180,7 +180,20 @@ btns.addEventListener("click", (e) => {
     if (e.target.id === "clear-btn") {
       init(true);
     }
-    if (e.target.id === "equals-btn" && expression.length >= 2) {
+    if (e.target.id === "equals-btn") {
+      console.log(
+        operators.includes(
+          outputDisplay.textContent[outputDisplay.textContent.length - 1],
+        ),
+      );
+    }
+    if (
+      e.target.id === "equals-btn" &&
+      operatorCount > 0 &&
+      !operators.includes(
+        outputDisplay.textContent[outputDisplay.textContent.length - 1],
+      )
+    ) {
       expression.push(
         Number(
           outputDisplay.textContent.slice(
@@ -194,14 +207,14 @@ btns.addEventListener("click", (e) => {
       } else {
         handleOperations(expression[0], operator);
       }
-    }
-    if (
+    } else if (
       e.target.id === "equals-btn" &&
       operators.includes(
         outputDisplay.textContent[outputDisplay.textContent.length - 1],
       )
     ) {
       console.warn("No number after operator");
+      return;
     }
     if (e.target.id === "equals-btn" && operatorCount === 0) {
       console.warn("Invalid expression entered");
