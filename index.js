@@ -7,43 +7,65 @@ const historyBtn = document.getElementById("history-btn");
 // initial state
 const operators = ["+", "-", "×", "÷", "^"];
 const historyArr = [];
-let operand,
-  operatorCount,
+let operatorCount,
   operator,
+  operand,
   expression,
   operandContainsDecimal,
   squareRoot,
-  lastCharDecimal;
+  lastCharDecimal,
+  historyShowing;
 function init(clearOutputDisplay) {
-  operand = "";
   operatorCount = 0;
   operator = "";
   expression = [];
   operandContainsDecimal = false;
   squareRoot = false; // flag if the square root operator is being used
   lastCharDecimal = false; // flag if an operand ends in a decimal without any numbers after it
+  historyShowing = false; // flag if history section is being displayed
   if (clearOutputDisplay === true) {
     outputDisplay.textContent = "0";
   }
 }
 init(true);
+function handleOutputEdgeCases(res) {
+  if (isNaN(res)) {
+    console.error(
+      "NaN was returned, could not complete operation, clearing output",
+    );
+    setTimeout(init, 2000, true);
+    return;
+  }
+  if (res >= 999899990001) {
+    console.warn("Result was too long, rounding result to 12 places");
+    res = Number(String(res).slice(0, 12));
+  }
+  if (res >= Number.MAX_SAFE_INTEGER) {
+    console.warn(
+      "Result was too high, the result is the largest number JavaScript can safely support",
+    );
+    res = Number.MAX_SAFE_INTEGER;
+  }
+  outputDisplay.textContent = res;
+  operand = res; // will this be a number datatype if textContent = operand = res
+}
+
 function handleOperations(operand1, operator, operand2) {
+  let result;
   if (operator === "+") {
-    outputDisplay.textContent = operand1 + operand2;
-    historyArr.push([
-      String(operand1),
-      operator,
-      String(operand2),
-      outputDisplay.textContent,
-    ]);
+    result = operand1 + operand2;
+    handleOutputEdgeCases(result);
+    historyArr.push([operand1, operator, operand2, "=", result]);
   }
   if (operator === "-") {
-    outputDisplay.textContent = operand1 - operand2;
-    historyArr.push([operand1, operator, operand2, outputDisplay.textContent]);
+    result = operand1 - operand2;
+    handleOutputEdgeCases(result);
+    historyArr.push([operand1, operator, operand2, "=", result]);
   }
   if (operator === "×") {
-    outputDisplay.textContent = operand1 * operand2;
-    historyArr.push([operand1, operator, operand2, outputDisplay.textContent]);
+    result = operand1 * operand2;
+    handleOutputEdgeCases(result);
+    historyArr.push([operand1, operator, operand2, "=", result]);
   }
   if (operator === "÷") {
     if (operand2 === 0) {
@@ -51,22 +73,22 @@ function handleOperations(operand1, operator, operand2) {
       setTimeout(init, 2000, true);
       return;
     }
-    outputDisplay.textContent = operand1 / operand2;
-    historyArr.push([operand1, operator, operand2, outputDisplay.textContent]);
+    result = operand1 / operand2;
+    handleOutputEdgeCases(result);
+    historyArr.push([operand1, operator, operand2, "=", result]);
   }
   if (operator === "^") {
-    outputDisplay.textContent = operand1 ** operand2;
-    historyArr.push([operand1, operator, operand2, outputDisplay.textContent]);
-  }
-  if (operator === "÷") {
-    outputDisplay.textContent = operand1 + operand2;
-    historyArr.push([operand1, operator, operand2, outputDisplay.textContent]);
+    result = operand1 ** operand2;
+    handleOutputEdgeCases(result);
+    historyArr.push([operand1, operator, operand2, "=", result]);
   }
   if (operator === "√") {
-    outputDisplay.textContent = Math.sqrt(operand1);
-    historyArr.push([operand1, operator, outputDisplay.textContent]);
+    result = Math.sqrt(operand1);
+    handleOutputEdgeCases(result);
+    outputDisplay.textContent = result;
+    historyArr.push([operand1, operator, "=", result]);
   }
-  console.log(historyArr);
+  init();
 }
 btns.addEventListener("click", (e) => {
   if (e.target.tagName !== "BUTTON") return; // gaurd clause in case a button element isn't pressed
@@ -155,22 +177,32 @@ btns.addEventListener("click", (e) => {
     if (e.target.id === "clear-btn") {
       init(true);
     }
-    if (e.target.id === "equals-btn") {
+    if (
+      e.target.id === "equals-btn" &&
+      !operators.includes(
+        outputDisplay.textContent[outputDisplay.textContent.length - 1],
+      )
+    ) {
       expression.push(
         Number(
           outputDisplay.textContent.slice(
-            outputDisplay.textContent.indexOf(operator) + 1, // check if cutting an extra char
+            outputDisplay.textContent.indexOf(operator) + 1,
           ),
         ),
       );
       if (squareRoot === false) {
         // all operations besides square root
         handleOperations(expression[0], operator, expression[2]);
-        init();
       } else {
         handleOperations(expression[0], operator);
-        init();
       }
+    } else if (
+      e.target.id === "equals-btn" &&
+      operators.includes(
+        outputDisplay.textContent[outputDisplay.textContent.length - 1],
+      )
+    ) {
+      console.warn("No number after operator");
     }
     if (e.target.id === "decimal-btn" && operandContainsDecimal === false) {
       outputDisplay.textContent += ".";
@@ -196,16 +228,20 @@ btns.addEventListener("click", (e) => {
 historyBtn.addEventListener("click", (e) => {
   if (historyArr.length > 0) {
     historySection.classList.toggle("hidden");
+    historyShowing = !historyShowing;
     for (let i = 0; i < historyArr.length; i++) {
-      let historyArrEntry = historyArr[i];
-      let historyArrEntryBtn = document.createElement("button");
-      historySection.append(historyArrEntryBtn);
-      for (let j = 0; j < historyArrEntry.length - 1; j++) {
-        historyArrEntryBtn.textContent += ` ${historyArrEntry[j]}`;
-        historyArrEntryBtn.addEventListener("click", (e) => {
-          outputDisplay.textContent =
-            historyArrEntry[historyArrEntry.length - 1];
-        });
+      let entry = historyArr[i];
+      const btn = document.createElement("button");
+      let result = historyArr[i];
+      console.log(result);
+      for (let j = 0; j < entry.length; j++) {
+        btn.textContent += `${entry[j]} `;
+      }
+      historySection.append(btn);
+    }
+    if (historyShowing && historySection.children.length > 1) {
+      for (const ele of historySection.children) {
+        ele.remove();
       }
     }
   } else {
