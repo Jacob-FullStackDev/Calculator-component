@@ -159,6 +159,11 @@ btns.addEventListener("click", (e) => {
     console.warn(
       "No number after decimal point, reassigned decimal to operator",
     );
+  } else if (
+    outputDisplay.textContent === "0" &&
+    e.target.classList.contains("btn--operator")
+  ) {
+    console.warn("Did not add operator since there was no first operand");
   }
   if (
     e.target.classList.contains("btn--operator") &&
@@ -233,20 +238,30 @@ historyBtn.addEventListener("click", (e) => {
       let entry = historyArr[i];
       const btn = document.createElement("button");
       let result = historyArr[i];
-      console.log(result);
       for (let j = 0; j < entry.length; j++) {
         btn.textContent += `${entry[j]} `;
       }
       historySection.append(btn);
     }
-    if (historyShowing && historySection.children.length > 1) {
-      for (const ele of historySection.children) {
-        ele.remove();
-      }
+    return;
+  }
+  if (historyShowing) {
+    historySection.classList.toggle("hidden");
+    historyShowing = !historyShowing;
+    while (historySection.firstChild) {
+      historySection.removeChild(historySection.firstChild);
     }
-  } else {
+  }
+  if (historyArr.length === 0)
     console.warn(
       "There is no history, please complete an operation before trying to access your history",
+    );
+});
+historySection.addEventListener("click", (e) => {
+  if (e.target.tagName !== "BUTTON") return; // gaurd clause in case a button element isn't pressed
+  if (e.target.tagName === "BUTTON") {
+    outputDisplay.textContent = e.target.textContent.slice(
+      e.target.textContent.indexOf("=") + 1,
     );
   }
 });
