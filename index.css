@@ -80,7 +80,7 @@ body {
   grid-template-columns: repeat(4, 1fr);
   column-gap: 20px;
 }
-.btn {
+.btn:not(.btn--expression, #clear-history-btn) {
   display: flex;
   font-size: 2.7rem;
   justify-content: center;
@@ -134,7 +134,9 @@ body {
 #history-section.hidden {
   display: none;
 }
-#history-section button {
+#history-section button:not(#clear-history-btn) {
+  display: flex;
+  justify-content: flex-start;
   border: 2px solid #ccc;
   display: flex;
   width: 70%;
@@ -143,4 +145,16 @@ body {
 }
 #close-history-section-btn.close-history-section-btn {
   border: 2px solid red;
+}
+#clear-history-btn,
+.btn--expression {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#clear-history-btn {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 6px;
+  padding: 10px;
 }

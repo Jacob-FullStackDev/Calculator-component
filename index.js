@@ -52,6 +52,7 @@ function handleOutputEdgeCases(res) {
 
 function handleOperations(operand1, operator, operand2) {
   let result;
+  const previousHistoryArrLength = historyArr.length;
   if (operator === "+") {
     result = operand1 + operand2;
     handleOutputEdgeCases(result);
@@ -85,28 +86,25 @@ function handleOperations(operand1, operator, operand2) {
   if (operator === "√") {
     result = Math.sqrt(operand1);
     handleOutputEdgeCases(result);
-    outputDisplay.textContent = result;
     historyArr.push([operand1, operator, "=", result]);
   }
+  console.log(previousHistoryArrLength);
+  const expressionBtn = document.createElement("button");
+  expressionBtn.className = "btn btn--expression";
+  for (let i = 0; i < historyArr[previousHistoryArrLength].length; i++) {
+    expressionBtn.textContent += `${historyArr[previousHistoryArrLength][i]} `;
+  }
+  historySection.appendChild(expressionBtn);
   init();
+  console.log(outputDisplay.textContent);
 }
 btns.addEventListener("click", (e) => {
   if (e.target.tagName !== "BUTTON") return; // gaurd clause in case a button element isn't pressed
   // handle numbers
-  if (
-    e.target.classList.contains("btn--num") &&
-    operandContainsDecimal === false
-  ) {
+  if (e.target.classList.contains("btn--num")) {
     outputDisplay.textContent === "0"
       ? (outputDisplay.textContent = e.target.textContent)
       : (outputDisplay.textContent += e.target.textContent);
-    lastCharDecimal = false;
-  }
-  if (
-    e.target.classList.contains("btn--num") &&
-    operandContainsDecimal === true
-  ) {
-    outputDisplay.textContent += e.target.textContent;
     lastCharDecimal = false;
   }
   if (
@@ -182,12 +180,7 @@ btns.addEventListener("click", (e) => {
     if (e.target.id === "clear-btn") {
       init(true);
     }
-    if (
-      e.target.id === "equals-btn" &&
-      !operators.includes(
-        outputDisplay.textContent[outputDisplay.textContent.length - 1],
-      )
-    ) {
+    if (e.target.id === "equals-btn" && expression.length >= 2) {
       expression.push(
         Number(
           outputDisplay.textContent.slice(
@@ -201,13 +194,17 @@ btns.addEventListener("click", (e) => {
       } else {
         handleOperations(expression[0], operator);
       }
-    } else if (
+    }
+    if (
       e.target.id === "equals-btn" &&
       operators.includes(
         outputDisplay.textContent[outputDisplay.textContent.length - 1],
       )
     ) {
       console.warn("No number after operator");
+    }
+    if (e.target.id === "equals-btn" && operatorCount === 0) {
+      console.warn("Invalid expression entered");
     }
     if (e.target.id === "decimal-btn" && operandContainsDecimal === false) {
       outputDisplay.textContent += ".";
@@ -231,37 +228,20 @@ btns.addEventListener("click", (e) => {
   }
 });
 historyBtn.addEventListener("click", (e) => {
-  if (historyArr.length > 0) {
-    historySection.classList.toggle("hidden");
-    historyShowing = !historyShowing;
-    for (let i = 0; i < historyArr.length; i++) {
-      let entry = historyArr[i];
-      const btn = document.createElement("button");
-      let result = historyArr[i];
-      for (let j = 0; j < entry.length; j++) {
-        btn.textContent += `${entry[j]} `;
-      }
-      historySection.append(btn);
-    }
-    return;
-  }
-  if (historyShowing) {
-    historySection.classList.toggle("hidden");
-    historyShowing = !historyShowing;
-    while (historySection.firstChild) {
-      historySection.removeChild(historySection.firstChild);
-    }
-  }
-  if (historyArr.length === 0)
+  if (historyArr.length === 0) {
     console.warn(
       "There is no history, please complete an operation before trying to access your history",
     );
+    return;
+  }
+  historySection.classList.toggle("hidden");
 });
 historySection.addEventListener("click", (e) => {
   if (e.target.tagName !== "BUTTON") return; // gaurd clause in case a button element isn't pressed
-  if (e.target.tagName === "BUTTON") {
+  if (e.target.classList.contains("btn--expression")) {
     outputDisplay.textContent = e.target.textContent.slice(
-      e.target.textContent.indexOf("=") + 1,
+      e.target.textContent.indexOf("=") + 2,
     );
+    console.log(outputDisplay.textContent);
   }
 });
