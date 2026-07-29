@@ -102,7 +102,7 @@ body {
 
 .btn:hover {
   outline: 2px solid #000; /* using border changes the rendered dimensions which I didn't want */
-  opacity: 0.92;
+  opacity: 0.9;
 }
 .btn:active {
   background-color: #b60200;
@@ -133,6 +133,9 @@ body {
   margin-bottom: 6px;
   padding: 10px;
 }
+#history-section button:hover {
+  opacity: 0.8;
+}
 #close-history-section-btn.close-history-section-btn {
   border: 2px solid red;
 }
@@ -144,9 +147,8 @@ body {
 }
 #clear-history-btn {
   display: flex;
-  width: 48px;
-  height: 48px;
-  margin-bottom: 6px;
+  padding: 12px;
+  margin-bottom: 10px;
 }
 @media (max-width: 562px) {
   #calculator-component {
