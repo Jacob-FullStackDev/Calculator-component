@@ -85,6 +85,10 @@ body {
   grid-template-columns: repeat(4, 1fr);
   column-gap: 20px;
 }
+.btn {
+  border-radius: 0;
+  border: none;
+}
 .btn:not(.btn--expression, #clear-history-btn) {
   display: flex;
   font-size: 2.7rem;
@@ -93,16 +97,16 @@ body {
   padding: 12px;
   width: 60px;
   height: 60px;
-  border: none;
   box-shadow: 2px 2px 3px #222;
 }
 
 .btn:hover {
-  outline: 3px solid #000; /* using border changes the rendered dimensions which I didn't want */
+  outline: 2px solid #000; /* using border changes the rendered dimensions which I didn't want */
   opacity: 0.92;
 }
 .btn:active {
   background-color: #b60200;
+  border: none;
   box-shadow: 1px 1px 20px #111;
 }
 .btn:focus-visible,
@@ -140,7 +144,6 @@ body {
 }
 #clear-history-btn {
   display: flex;
-  margin-right: auto;
   width: 48px;
   height: 48px;
   margin-bottom: 6px;

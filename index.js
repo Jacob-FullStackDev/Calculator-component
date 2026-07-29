@@ -260,7 +260,6 @@ historySection.addEventListener("click", (e) => {
     );
   }
   if (e.target.classList.contains("clear-history")) {
-    console.log(historySection.firstElementChild.id);
     while (
       !historySection.lastElementChild.classList.contains("clear-history")
     ) {
