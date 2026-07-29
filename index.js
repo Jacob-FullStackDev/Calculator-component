@@ -254,7 +254,7 @@ historySection.addEventListener("click", (e) => {
       !historySection.lastElementChild.classList.contains("clear-history")
     ) {
       historySection.removeChild(historySection.lastChild);
-      historyArr.splice(0, historyArr.length - 1);
+      historyArr.splice(0, historyArr.length);
     }
   }
 });
