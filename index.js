@@ -29,16 +29,13 @@ function init(clearOutputDisplay) {
 init(true);
 
 function handleOutputEdgeCases(res) {
+  // displays to output display and output related edge cases
   if (isNaN(res)) {
     console.error(
       "NaN was returned, could not complete operation, clearing output",
     );
     setTimeout(init, 2000, true);
     return;
-  }
-  if (res >= 999899990001) {
-    console.warn("Result was too long, rounding result to 12 places");
-    res = Number(String(res).slice(0, 12));
   }
   if (res >= Number.MAX_SAFE_INTEGER) {
     console.warn(
@@ -55,17 +52,23 @@ function handleOperations(operand1, operator, operand2) {
   if (operator === "+") {
     result = operand1 + operand2;
     handleOutputEdgeCases(result);
-    historyArr.push([operand1, operator, operand2, "=", result]);
+    if (typeof result === "number" && !isNaN(result)) {
+      historyArr.push([operand1, operator, operand2, "=", result]);
+    }
   }
   if (operator === "-") {
     result = operand1 - operand2;
     handleOutputEdgeCases(result);
-    historyArr.push([operand1, operator, operand2, "=", result]);
+    if (typeof result === "number" && !isNaN(result)) {
+      historyArr.push([operand1, operator, operand2, "=", result]);
+    }
   }
   if (operator === "×") {
     result = operand1 * operand2;
     handleOutputEdgeCases(result);
-    historyArr.push([operand1, operator, operand2, "=", result]);
+    if (typeof result === "number" && !isNaN(result)) {
+      historyArr.push([operand1, operator, operand2, "=", result]);
+    }
   }
   if (operator === "÷") {
     if (operand2 === 0) {
@@ -75,22 +78,30 @@ function handleOperations(operand1, operator, operand2) {
     }
     result = operand1 / operand2;
     handleOutputEdgeCases(result);
-    historyArr.push([operand1, operator, operand2, "=", result]);
+    if (typeof result === "number" && !isNaN(result)) {
+      historyArr.push([operand1, operator, operand2, "=", result]);
+    }
   }
   if (operator === "^") {
     result = operand1 ** operand2;
     handleOutputEdgeCases(result);
-    historyArr.push([operand1, operator, operand2, "=", result]);
+    if (typeof result === "number" && !isNaN(result)) {
+      historyArr.push([operand1, operator, operand2, "=", result]);
+    }
   }
   if (operator === "√") {
     result = Math.sqrt(operand1);
     handleOutputEdgeCases(result);
-    historyArr.push([operand1, operator, "=", result]);
+    if (typeof result === "number" && !isNaN(result)) {
+      historyArr.push([operand1, operator, operand2, "=", result]);
+    }
   }
   const expressionBtn = document.createElement("button");
   expressionBtn.className = "btn btn--expression";
-  for (let i = 0; i < historyArr[previousHistoryArrLength].length; i++) {
-    expressionBtn.textContent += `${historyArr[previousHistoryArrLength][i]} `;
+  if (typeof result === "number" && !isNaN(result)) {
+    for (let i = 0; i < historyArr[previousHistoryArrLength].length; i++) {
+      expressionBtn.textContent += `${historyArr[previousHistoryArrLength][i]} `;
+    }
   }
   expressionBtn.textContent = expressionBtn.textContent.trimEnd();
   expressionBtn.disabled = historySectionBtnsDisabled ? true : false;
@@ -190,12 +201,16 @@ btns.addEventListener("click", (e) => {
         ) + operator;
       expression[1] = operator;
     }
-    // handle clear, percentages, decimals
+    // handle clear, decimals, equals
     if (e.target.classList.contains("btn--special")) {
       if (e.target.id === "clear-btn") {
         init(true);
       }
-      if (e.target.id === "equals-btn") {
+      if (
+        (e.target.id === "equals-btn" && e.target.id === "equals-btn") ||
+        outputDisplay.textContent.includes(" ")
+      ) {
+        // if the output display contains a space and returns NaN as a result, it'll be handled in the handleOperations function call
         if (
           operatorCount > 0 &&
           !operators.includes(
