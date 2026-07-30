@@ -14,6 +14,7 @@ let operatorCount,
   operandContainsDecimal,
   squareRoot,
   lastCharDecimal;
+let historySectionBtnsDisabled = true;
 function init(clearOutputDisplay) {
   operatorCount = 0;
   operator = "";
@@ -26,6 +27,7 @@ function init(clearOutputDisplay) {
   }
 }
 init(true);
+
 function handleOutputEdgeCases(res) {
   if (isNaN(res)) {
     console.error(
@@ -46,6 +48,7 @@ function handleOutputEdgeCases(res) {
   }
   outputDisplay.textContent = res;
 }
+
 function handleOperations(operand1, operator, operand2) {
   let result;
   const previousHistoryArrLength = historyArr.length;
@@ -90,9 +93,21 @@ function handleOperations(operand1, operator, operand2) {
     expressionBtn.textContent += `${historyArr[previousHistoryArrLength][i]} `;
   }
   expressionBtn.textContent = expressionBtn.textContent.trimEnd();
+  expressionBtn.disabled = historySectionBtnsDisabled ? true : false;
   historySection.appendChild(expressionBtn);
   init();
 }
+
+function historySectionBtnDisabler(toggle) {
+  // enables/disables history section buttons when it is being displayed/hidden, based on a boolean
+  for (const ele of historySection.children) {
+    if (ele.tagName === "BUTTON") {
+      ele.disabled = toggle;
+    }
+  }
+}
+historySectionBtnDisabler(historySectionBtnsDisabled); // default value, when history section is hidden
+
 btns.addEventListener("click", (e) => {
   if (e.target.tagName !== "BUTTON") return; // gaurd clause in case a button element isn't pressed
   // handle numbers
@@ -249,7 +264,10 @@ historyBtn.addEventListener("click", (e) => {
     return;
   }
   historySection.classList.toggle("hidden");
+  historySectionBtnsDisabled = !historySectionBtnsDisabled;
+  historySectionBtnDisabler(historySectionBtnsDisabled);
 });
+
 historySection.addEventListener("click", (e) => {
   if (e.target.tagName === "SECTION") {
     return; // gaurd clause in case a button element isn't pressed
@@ -266,5 +284,6 @@ historySection.addEventListener("click", (e) => {
       historySection.removeChild(historySection.lastChild);
       historyArr.splice(0, historyArr.length);
     }
+    historySection.classList.toggle("hidden");
   }
 });
