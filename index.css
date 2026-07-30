@@ -121,7 +121,7 @@ body {
   grid-column: 2;
   width: 200px;
   height: 524px;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 #history-section.hidden {
   display: none;
