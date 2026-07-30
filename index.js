@@ -4,6 +4,7 @@ const btns = document.getElementById("calculator-btns");
 const outputDisplay = document.getElementById("output-display");
 const historyBtn = document.getElementById("history-btn");
 const historySection = document.getElementById("history-section");
+const historySectionList = document.getElementById("equation-btns-container");
 // initial state
 const operators = ["+", "-", "×", "÷", "^"];
 const historyArr = [];
@@ -97,6 +98,7 @@ function handleOperations(operand1, operator, operand2) {
     }
   }
   const expressionBtn = document.createElement("button");
+  const expressionListItem = document.createElement("li");
   expressionBtn.className = "btn btn--expression";
   if (typeof result === "number" && !isNaN(result)) {
     for (let i = 0; i < historyArr[previousHistoryArrLength].length; i++) {
@@ -105,15 +107,17 @@ function handleOperations(operand1, operator, operand2) {
   }
   expressionBtn.textContent = expressionBtn.textContent.trimEnd();
   expressionBtn.disabled = historySectionBtnsDisabled ? true : false;
-  historySection.appendChild(expressionBtn);
+  historySectionList.appendChild(expressionListItem);
+  expressionListItem.appendChild(expressionBtn);
   init();
 }
 
 function historySectionBtnDisabler(toggle) {
   // enables/disables history section buttons when it is being displayed/hidden, based on a boolean
-  for (const ele of historySection.children) {
-    if (ele.tagName === "BUTTON") {
-      ele.disabled = toggle;
+  for (const ele of historySectionList.children) {
+    console.log(ele.tagName);
+    if (ele.tagName === "LI") {
+      ele.firstChild.disabled = toggle; // toggles on button nested in li element
     }
   }
 }
@@ -284,21 +288,20 @@ historyBtn.addEventListener("click", (e) => {
 });
 
 historySection.addEventListener("click", (e) => {
-  if (e.target.tagName === "SECTION") {
-    return; // gaurd clause in case a button element isn't pressed
-  }
-  if (e.target.classList.contains("btn--expression")) {
-    outputDisplay.textContent = e.target.textContent.slice(
-      e.target.textContent.indexOf("=") + 2,
-    );
-  }
-  if (e.target.classList.contains("clear-history")) {
-    while (
-      !historySection.lastElementChild.classList.contains("clear-history")
-    ) {
-      historySection.removeChild(historySection.lastChild);
-      historyArr.splice(0, historyArr.length);
+  if (e.target.tagName === "BUTTON") {
+    if (e.target.classList.contains("btn--expression")) {
+      outputDisplay.textContent = e.target.textContent.slice(
+        e.target.textContent.indexOf("=") + 2,
+      );
     }
-    historySection.classList.toggle("hidden");
+    if (e.target.classList.contains("clear-history")) {
+      while (
+        !historySection.lastElementChild.classList.contains("clear-history")
+      ) {
+        historySection.removeChild(historySection.lastChild);
+        historyArr.splice(0, historyArr.length);
+      }
+      historySection.classList.toggle("hidden");
+    }
   }
 });
