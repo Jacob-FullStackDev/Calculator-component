@@ -24,37 +24,30 @@ h1 {
 }
 
 /* Set core body defaults */
-body {
-  min-height: 100vh;
-  line-height: 1.5;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+
 h1,
 button {
   line-height: 1.1;
 }
-input,
-button,
-textarea,
-select {
-  font-family: inherit;
-  font-size: inherit;
-}
-#root-container {
-  height: 100%;
-  display: grid;
-}
-/*COMPONENT STYLES*/
 body {
+  min-height: 100vh;
+  line-height: 1.5;
   display: flex;
   background-color: #888;
   overflow: hidden;
   align-items: center;
   justify-content: center;
+  font-family: Arial, "Arial Black", Verdana, Tahoma, Helvetica, sans-serif;
 }
+* {
+  font-family: inherit;
+}
+/*COMPONENT STYLES*/
 
+#root-container {
+  height: 100%;
+  display: grid;
+}
 #calculator-component {
   border: 1px solid #333;
   box-shadow: 7px 7px 14px #000;
@@ -71,6 +64,8 @@ body {
   overflow: hidden;
   font-size: 36px;
   padding-left: 30px;
+  font-family:
+    "Courier New", Consolas, "Lucida Sans Typewriter", Monaco, monospace;
 }
 #calculator-btns {
   display: grid;
@@ -90,6 +85,7 @@ body {
 .btn {
   border-radius: 0;
   border: none;
+  cursor: pointer;
 }
 .btn:not(.btn--expression, #clear-history-btn) {
   display: flex;
