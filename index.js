@@ -115,7 +115,6 @@ function handleOperations(operand1, operator, operand2) {
 function historySectionBtnDisabler(toggle) {
   // enables/disables history section buttons when it is being displayed/hidden, based on a boolean
   for (const ele of historySectionList.children) {
-    console.log(ele.tagName);
     if (ele.tagName === "LI") {
       ele.firstChild.disabled = toggle; // toggles on button nested in li element
     }
@@ -294,11 +293,9 @@ historySection.addEventListener("click", (e) => {
         e.target.textContent.indexOf("=") + 2,
       );
     }
-    if (e.target.classList.contains("clear-history")) {
-      while (
-        !historySection.lastElementChild.classList.contains("clear-history")
-      ) {
-        historySection.removeChild(historySection.lastChild);
+    if (e.target.id === "clear-history-btn") {
+      while (historySectionList.children.length !== 0) {
+        historySectionList.removeChild(historySectionList.lastChild);
         historyArr.splice(0, historyArr.length);
       }
       historySection.classList.toggle("hidden");

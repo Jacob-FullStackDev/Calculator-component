@@ -127,10 +127,8 @@ body {
   display: none;
 }
 #history-section ul li button {
-  width: 70%;
   margin-bottom: 6px;
   padding: 10px;
-  margin-left: 10px;
 }
 #history-section button:hover {
   opacity: 0.8;
@@ -138,18 +136,41 @@ body {
 #close-history-section-btn.close-history-section-btn {
   border: 2px solid red;
 }
-#clear-history-btn,
 .btn--expression {
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
 }
 #clear-history-btn {
-  margin-bottom: 12px;
+  padding: 8px;
+  width: 70%;
+}
+h2 {
+  margin-bottom: 8px;
+}
+header,
+#equation-btns-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+#equation-btns-container li {
+  width: 70%;
+}
+
+hr {
+  width: 70%;
+  margin-top: 10px;
 }
 ul {
   width: 100%;
   list-style-type: none;
+}
+ul button {
+  margin-top: 16px;
 }
 /* RESPONSIVE DESIGN */
 @media (max-width: 562px) {
