@@ -96,21 +96,25 @@ function handleOperations(operand1, operator, operand2) {
     if (typeof result === "number" && !isNaN(result)) {
       historyArr.push([operand1, operator, operand2, "=", result]);
     }
+  } else {
+    console.error("Invalid operator, clearing output");
+    setTimeout(init, 2000, true);
+    return;
   }
-  const expressionBtn = document.createElement("button");
-  const expressionListItem = document.createElement("li");
-  expressionBtn.className = "btn btn--expression";
-  if (typeof result === "number" && !isNaN(result)) {
-    for (let i = 0; i < historyArr[previousHistoryArrLength].length; i++) {
-      expressionBtn.textContent += `${historyArr[previousHistoryArrLength][i]} `;
-    }
-  }
-  expressionBtn.textContent = expressionBtn.textContent.trimEnd();
-  expressionBtn.disabled = historySectionBtnsDisabled ? true : false;
-  historySectionList.appendChild(expressionListItem);
-  expressionListItem.appendChild(expressionBtn);
-  init();
 }
+const expressionBtn = document.createElement("button");
+const expressionListItem = document.createElement("li");
+expressionBtn.className = "btn btn--expression";
+if (typeof result === "number" && !isNaN(result)) {
+  for (let i = 0; i < historyArr[previousHistoryArrLength].length; i++) {
+    expressionBtn.textContent += `${historyArr[previousHistoryArrLength][i]} `;
+  }
+}
+expressionBtn.textContent = expressionBtn.textContent.trimEnd();
+expressionBtn.disabled = historySectionBtnsDisabled ? true : false;
+historySectionList.appendChild(expressionListItem);
+expressionListItem.appendChild(expressionBtn);
+init();
 
 function historySectionBtnDisabler(toggle) {
   // enables/disables history section buttons when it is being displayed/hidden, based on a boolean
@@ -209,11 +213,7 @@ btns.addEventListener("click", (e) => {
       if (e.target.id === "clear-btn") {
         init(true);
       }
-      if (
-        (e.target.id === "equals-btn" && e.target.id === "equals-btn") ||
-        outputDisplay.textContent.includes(" ")
-      ) {
-        // if the output display contains a space and returns NaN as a result, it'll be handled in the handleOperations function call
+      if (e.target.id === "equals-btn" && e.target.id === "equals-btn") {
         if (
           operatorCount > 0 &&
           !operators.includes(

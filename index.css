@@ -51,7 +51,7 @@ body {
 #calculator-component {
   border: 1px solid #333;
   box-shadow: 7px 7px 14px #000;
-  background-color: rgb(38, 38, 210);
+  background-color: #2626d2;
   grid-column: 1;
 }
 #output-display {
